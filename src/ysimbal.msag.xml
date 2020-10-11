@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>YSIMBAL</ARBGB>
+    <MASTERLANG>T</MASTERLANG>
+    <STEXT>Uygulama günlüğü iletileri</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>000</MSGNR>
+     <TEXT>&amp;1 günlük nesnesi sistemde tanımlı değil</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>&amp;1 &amp;2 günlük nesnesi sistemde tanımlı değil</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>&amp;1 &amp;2 günlük nesnesi yaratılamadı</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Günlüğe iletiler kaydedilirken bir hata oluştu</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>&amp;1 &amp;2 günlük nesnesinin iletileri veritabanına kaydedilemedi</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Günlüğe ileti eklerken bir hata oluştu</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>&amp; &amp; &amp; &amp;</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>
