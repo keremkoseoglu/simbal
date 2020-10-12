@@ -44,6 +44,15 @@ public section.
       attr3 type scx_attrname value '',
       attr4 type scx_attrname value '',
     end of ADD_MESSAGE_ERROR .
+  constants:
+    begin of CANT_CREATE_OBJECT,
+      msgid type symsgid value 'YSIMBAL',
+      msgno type symsgno value '007',
+      attr1 type scx_attrname value '',
+      attr2 type scx_attrname value '',
+      attr3 type scx_attrname value '',
+      attr4 type scx_attrname value '',
+    end of CANT_CREATE_OBJECT .
   data OBJECT type BALOBJ_D .
   data SUBOBJECT type BALSUBOBJ .
 
