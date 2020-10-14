@@ -53,6 +53,24 @@ public section.
       attr3 type scx_attrname value '',
       attr4 type scx_attrname value '',
     end of CANT_CREATE_OBJECT .
+  constants:
+    begin of CANT_SAVE,
+      msgid type symsgid value 'YSIMBAL',
+      msgno type symsgno value '004',
+      attr1 type scx_attrname value 'OBJECT',
+      attr2 type scx_attrname value 'SUBOBJECT',
+      attr3 type scx_attrname value '',
+      attr4 type scx_attrname value '',
+    end of CANT_SAVE .
+  constants:
+    begin of CANT_DISPLAY,
+      msgid type symsgid value 'YSIMBAL',
+      msgno type symsgno value '008',
+      attr1 type scx_attrname value 'OBJECT',
+      attr2 type scx_attrname value 'SUBOBJECT',
+      attr3 type scx_attrname value '',
+      attr4 type scx_attrname value '',
+    end of CANT_DISPLAY .
   data OBJECT type BALOBJ_D .
   data SUBOBJECT type BALSUBOBJ .
 

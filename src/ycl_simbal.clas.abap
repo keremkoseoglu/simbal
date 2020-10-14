@@ -179,7 +179,7 @@ CLASS ycl_simbal DEFINITION
       CHANGING
         VALUE(save_all) TYPE abap_bool DEFAULT abap_true
       RAISING
-        ycx_simbal_log_save .
+        YCX_SIMBAL_LOG .
 
     METHODS save_to_db
       IMPORTING
@@ -187,7 +187,7 @@ CLASS ycl_simbal DEFINITION
       CHANGING
         VALUE(save_all) TYPE abap_bool DEFAULT abap_true
       RAISING
-        ycx_simbal_log_save .
+        YCX_SIMBAL_LOG .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -896,9 +896,9 @@ CLASS ycl_simbal IMPLEMENTATION.
         OTHERS           = 4.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE ycx_simbal_log_save
+      RAISE EXCEPTION TYPE YCX_SIMBAL_LOG
         EXPORTING
-          textid    = ycx_simbal_log_save=>cant_save
+          textid    = YCX_SIMBAL_LOG=>cant_save
           object    = me->object
           subobject = me->subobject.
     ENDIF.
@@ -929,9 +929,9 @@ CLASS ycl_simbal IMPLEMENTATION.
         OTHERS               = 4.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE ycx_simbal_log_save
+      RAISE EXCEPTION TYPE ycx_simbal_log
         EXPORTING
-          textid    = ycx_simbal_log_save=>cant_save
+          textid    = ycx_simbal_log=>cant_save
           object    = me->object
           subobject = me->subobject.
     ENDIF.

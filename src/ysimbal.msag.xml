@@ -56,6 +56,12 @@
      <MSGNR>007</MSGNR>
      <TEXT>Günlük nesnesi yaratılamadı</TEXT>
     </T100>
+    <T100>
+     <SPRSL>T</SPRSL>
+     <ARBGB>YSIMBAL</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>&amp;1 &amp;2 iletileri görüntülenirken bir hata oluştu</TEXT>
+    </T100>
    </T100>
   </asx:values>
  </asx:abap>
