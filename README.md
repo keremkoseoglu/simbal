@@ -27,3 +27,5 @@ To save messages to the application log:
 ```
 simbal->save_to_db( ).
 ```
+
+To show the log contents to the user over SAP GUI, you may use any method within **YCL_SIMBAL_GUI**.
