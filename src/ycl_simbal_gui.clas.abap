@@ -109,10 +109,15 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     CLEAR exit_command.
 
+    DATA(messages_to_show) = me->simbal->get_messages( ).
+    IF lines( messages_to_show ) <= 0.
+      RETURN.
+    ENDIF.
+
     CALL FUNCTION 'MESSAGES_INITIALIZE'.
     DATA(lineno) = CONV msgzeile( 0 ).
 
-    LOOP AT me->simbal->get_messages( ) ASSIGNING FIELD-SYMBOL(<msg>).
+    LOOP AT messages_to_show ASSIGNING FIELD-SYMBOL(<msg>).
       lineno = lineno + 1.
 
       CALL FUNCTION 'MESSAGE_STORE'
