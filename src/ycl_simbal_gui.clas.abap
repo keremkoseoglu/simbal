@@ -4,9 +4,20 @@ CLASS ycl_simbal_gui DEFINITION
   CREATE PUBLIC .
 
   PUBLIC SECTION.
+    TYPES: BEGIN OF exception_dict,
+             error TYPE REF TO cx_root,
+           END OF exception_dict,
+
+           exception_list TYPE STANDARD TABLE OF exception_dict WITH EMPTY KEY.
+
     CLASS-METHODS display_cx_msg_popup
       IMPORTING
         !cx   TYPE REF TO cx_root
+        !text TYPE clike OPTIONAL .
+
+    CLASS-METHODS display_cx_msgs_popup
+      IMPORTING
+        !cxs  TYPE exception_list
         !text TYPE clike OPTIONAL .
 
     CLASS-METHODS display_cx_msg_matryoshka IMPORTING !cx TYPE REF TO cx_root .
@@ -67,6 +78,42 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
 
       CATCH cx_root.
         display_cx_msg_matryoshka( cx ).
+
+        IF text IS SUPPLIED.
+          MESSAGE text TYPE ycl_simbal=>msgty-info.
+        ENDIF.
+    ENDTRY.
+  ENDMETHOD.
+
+
+  METHOD display_cx_msgs_popup.
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Shows a list of exception message in a SIMBAL popup
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    CHECK cxs IS NOT INITIAL.
+
+    TRY.
+        DATA(balsub) = get_dummy_balsub( ).
+
+        DATA(simbal) = NEW ycl_simbal(
+            object    = balsub-object
+            subobject = balsub-subobject ).
+
+        IF text IS SUPPLIED.
+          simbal->add_free_text( text  = text
+                                 msgty = ycl_simbal=>msgty-error ).
+        ENDIF.
+
+        LOOP AT cxs ASSIGNING FIELD-SYMBOL(<cx>) WHERE error IS NOT INITIAL.
+          simbal->add_exception( <cx>-error ).
+        ENDLOOP.
+
+        NEW ycl_simbal_gui( simbal )->show_light_popup( ).
+
+      CATCH cx_root.
+        LOOP AT cxs ASSIGNING <cx> WHERE error IS NOT INITIAL.
+          display_cx_msg_matryoshka( <cx>-error ).
+        ENDLOOP.
 
         IF text IS SUPPLIED.
           MESSAGE text TYPE ycl_simbal=>msgty-info.
