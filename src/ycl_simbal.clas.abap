@@ -103,7 +103,8 @@ CLASS ycl_simbal DEFINITION
 
     METHODS add_string
       IMPORTING
-        !msg TYPE string .
+        !msg   TYPE string
+        !msgty TYPE symsgty DEFAULT msgty-error.
 
     METHODS add_swr
       IMPORTING
@@ -179,7 +180,7 @@ CLASS ycl_simbal DEFINITION
       CHANGING
         VALUE(save_all) TYPE abap_bool DEFAULT abap_true
       RAISING
-        YCX_SIMBAL_LOG .
+        ycx_simbal_log .
 
     METHODS save_to_db
       IMPORTING
@@ -187,7 +188,7 @@ CLASS ycl_simbal DEFINITION
       CHANGING
         VALUE(save_all) TYPE abap_bool DEFAULT abap_true
       RAISING
-        YCX_SIMBAL_LOG .
+        ycx_simbal_log .
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -522,7 +523,7 @@ CLASS ycl_simbal IMPLEMENTATION.
     LOOP AT ret ASSIGNING FIELD-SYMBOL(<ret>).
       <return>-id = me->msgid-simbal.
       <return>-number = '006'.
-      <return>-type = me->msgty-error.
+      <return>-type = msgty.
       IF  <return>-message_v1 IS INITIAL.
         <return>-message_v1 = <ret>.
       ELSEIF  <return>-message_v2 IS INITIAL.
@@ -896,9 +897,9 @@ CLASS ycl_simbal IMPLEMENTATION.
         OTHERS           = 4.
 
     IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE YCX_SIMBAL_LOG
+      RAISE EXCEPTION TYPE ycx_simbal_log
         EXPORTING
-          textid    = YCX_SIMBAL_LOG=>cant_save
+          textid    = ycx_simbal_log=>cant_save
           object    = me->object
           subobject = me->subobject.
     ENDIF.
