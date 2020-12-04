@@ -156,6 +156,10 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     CLEAR exit_command.
 
+    IF me->simbal IS INITIAL.
+      RETURN.
+    ENDIF.
+
     DATA(messages_to_show) = me->simbal->get_messages( ).
     IF lines( messages_to_show ) <= 0.
       RETURN.
@@ -266,6 +270,11 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
     " Shows messages with the given BAL profile
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     CLEAR exit_command.
+
+    IF me->simbal IS INITIAL.
+      RETURN.
+    ENDIF.
+
     DATA(prof) = profile.
 
     prof-use_grid = abap_true.
