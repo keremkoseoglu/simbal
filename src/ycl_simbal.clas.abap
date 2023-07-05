@@ -220,57 +220,7 @@ ENDCLASS.
 
 
 
-CLASS ycl_simbal IMPLEMENTATION.
-  METHOD get_crit_msgty_range.
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Returns a list of critical message types
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    IF ycl_simbal=>critical_message_type_rng IS INITIAL.
-      ycl_simbal=>critical_message_type_rng = VALUE #(
-          option = ycl_simbal=>option-eq
-          sign   = ycl_simbal=>sign-include
-          ( low = ycl_simbal=>msgty-exit )
-          ( low = ycl_simbal=>msgty-abort )
-          ( low = ycl_simbal=>msgty-error ) ).
-    ENDIF.
-
-    output = ycl_simbal=>critical_message_type_rng.
-  ENDMETHOD.
-
-
-  METHOD constructor.
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Class constructor
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    me->object    = object.
-    me->subobject = subobject.
-
-    DATA(log_param) = VALUE bal_s_log(
-        object     = me->object
-        subobject  = me->subobject
-        aluser     = sy-uname
-        altcode    = sy-tcode
-        alprog     = sy-cprog
-        almode     = COND #( WHEN sy-batch IS INITIAL THEN 'D' ELSE 'B' )
-        aldate_del = COND #( WHEN preservation_days IS NOT INITIAL THEN sy-datum + preservation_days )
-        extnumber  = extnumber ).
-
-    CALL FUNCTION 'BAL_LOG_CREATE'
-      EXPORTING
-        i_s_log      = log_param
-      IMPORTING
-        e_log_handle = me->log_handle
-      EXCEPTIONS
-        OTHERS       = 1.
-
-    IF sy-subrc <> 0.
-      RAISE EXCEPTION TYPE ycx_simbal_log
-        EXPORTING
-          textid    = ycx_simbal_log=>cant_create_instance
-          object    = me->object
-          subobject = me->subobject.
-    ENDIF.
-  ENDMETHOD.
+CLASS YCL_SIMBAL IMPLEMENTATION.
 
 
   METHOD add_bapiret1.
@@ -647,6 +597,41 @@ CLASS ycl_simbal IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD constructor.
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Class constructor
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    me->object    = object.
+    me->subobject = subobject.
+
+    DATA(log_param) = VALUE bal_s_log(
+        object     = me->object
+        subobject  = me->subobject
+        aluser     = sy-uname
+        altcode    = sy-tcode
+        alprog     = sy-cprog
+        almode     = COND #( WHEN sy-batch IS INITIAL THEN 'D' ELSE 'B' )
+        aldate_del = COND #( WHEN preservation_days IS NOT INITIAL THEN sy-datum + preservation_days )
+        extnumber  = extnumber ).
+
+    CALL FUNCTION 'BAL_LOG_CREATE'
+      EXPORTING
+        i_s_log      = log_param
+      IMPORTING
+        e_log_handle = me->log_handle
+      EXCEPTIONS
+        OTHERS       = 1.
+
+    IF sy-subrc <> 0.
+      RAISE EXCEPTION TYPE ycx_simbal_log
+        EXPORTING
+          textid    = ycx_simbal_log=>cant_create_instance
+          object    = me->object
+          subobject = me->subobject.
+    ENDIF.
+  ENDMETHOD.
+
+
   METHOD determine_pclass.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Determines problem class
@@ -656,6 +641,23 @@ CLASS ycl_simbal IMPLEMENTATION.
                      WHEN msgty  = ycl_simbal=>msgty-info OR
                           msgty  = ycl_simbal=>msgty-status  THEN '4'
                      ELSE '2' ).
+  ENDMETHOD.
+
+
+  METHOD get_crit_msgty_range.
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Returns a list of critical message types
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    IF ycl_simbal=>critical_message_type_rng IS INITIAL.
+      ycl_simbal=>critical_message_type_rng = VALUE #(
+          option = ycl_simbal=>option-eq
+          sign   = ycl_simbal=>sign-include
+          ( low = ycl_simbal=>msgty-exit )
+          ( low = ycl_simbal=>msgty-abort )
+          ( low = ycl_simbal=>msgty-error ) ).
+    ENDIF.
+
+    output = ycl_simbal=>critical_message_type_rng.
   ENDMETHOD.
 
 

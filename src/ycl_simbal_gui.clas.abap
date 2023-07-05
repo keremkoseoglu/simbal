@@ -56,33 +56,14 @@ ENDCLASS.
 
 
 
-CLASS ycl_simbal_gui IMPLEMENTATION.
-  METHOD display_cx_msg_popup.
+CLASS YCL_SIMBAL_GUI IMPLEMENTATION.
+
+
+  METHOD constructor.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Shows an exception message in a SIMBAL popup
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    TRY.
-        DATA(balsub) = get_dummy_balsub( ).
-
-        DATA(simbal) = NEW ycl_simbal(
-            object    = balsub-object
-            subobject = balsub-subobject ).
-
-        IF text IS SUPPLIED.
-          simbal->add_free_text( text  = text
-                                 msgty = ycl_simbal=>msgty-error ).
-        ENDIF.
-
-        simbal->add_exception( cx ).
-        NEW ycl_simbal_gui( simbal )->show_light_popup( ).
-
-      CATCH cx_root.
-        display_cx_msg_matryoshka( cx ).
-
-        IF text IS SUPPLIED.
-          MESSAGE text TYPE ycl_simbal=>msgty-info.
-        ENDIF.
-    ENDTRY.
+    " Object creation
+    """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    me->simbal = simbal.
   ENDMETHOD.
 
 
@@ -122,6 +103,15 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
   ENDMETHOD.
 
 
+  METHOD display_cx_msg_i.
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Displays the given exception as an information box
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    CHECK cx IS NOT INITIAL.
+    MESSAGE cx TYPE ycl_simbal=>msgty-info.
+  ENDMETHOD.
+
+
   METHOD display_cx_msg_matryoshka.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Displays the given exception as popups
@@ -133,20 +123,54 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD display_cx_msg_i.
+  METHOD display_cx_msg_popup.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Displays the given exception as an information box
+    " Shows an exception message in a SIMBAL popup
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    CHECK cx IS NOT INITIAL.
-    MESSAGE cx TYPE ycl_simbal=>msgty-info.
+    TRY.
+        DATA(balsub) = get_dummy_balsub( ).
+
+        DATA(simbal) = NEW ycl_simbal(
+            object    = balsub-object
+            subobject = balsub-subobject ).
+
+        IF text IS SUPPLIED.
+          simbal->add_free_text( text  = text
+                                 msgty = ycl_simbal=>msgty-error ).
+        ENDIF.
+
+        simbal->add_exception( cx ).
+        NEW ycl_simbal_gui( simbal )->show_light_popup( ).
+
+      CATCH cx_root.
+        display_cx_msg_matryoshka( cx ).
+
+        IF text IS SUPPLIED.
+          MESSAGE text TYPE ycl_simbal=>msgty-info.
+        ENDIF.
+    ENDTRY.
   ENDMETHOD.
 
 
-  METHOD constructor.
+  METHOD get_dummy_balsub.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Object creation
-    """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    me->simbal = simbal.
+    " Returns a dummy BALSUB key for display purposes only
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    IF ycl_simbal_gui=>dummy_balsub IS INITIAL.
+      SELECT SINGLE * FROM balsub                       "#EC CI_GENBUFF
+             WHERE object LIKE 'Y%' OR                  "#EC CI_NOORDER
+                   object LIKE 'Z%'
+             INTO CORRESPONDING FIELDS OF
+             @ycl_simbal_gui=>dummy_balsub.
+
+      IF sy-subrc <> 0.
+        SELECT SINGLE * FROM balsub                     "#EC CI_GENBUFF
+               INTO CORRESPONDING FIELDS OF             "#EC CI_NOORDER
+               @ycl_simbal_gui=>dummy_balsub.
+      ENDIF.
+    ENDIF.
+
+    output = ycl_simbal_gui=>dummy_balsub.
   ENDMETHOD.
 
 
@@ -198,21 +222,6 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD show_single.
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Shows in BAL single mode
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    CLEAR exit_command.
-    DATA(profile) = VALUE bal_s_prof( ).
-
-    CALL FUNCTION 'BAL_DSP_PROFILE_SINGLE_LOG_GET'
-      IMPORTING
-        e_s_display_profile = profile.
-
-    show_with_bal_profile( profile ).
-  ENDMETHOD.
-
-
   METHOD show_popup.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Shows in BAL popup mode
@@ -221,6 +230,21 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
     DATA(profile) = VALUE bal_s_prof( ).
 
     CALL FUNCTION 'BAL_DSP_PROFILE_POPUP_GET'
+      IMPORTING
+        e_s_display_profile = profile.
+
+    show_with_bal_profile( profile ).
+  ENDMETHOD.
+
+
+  METHOD show_single.
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    " Shows in BAL single mode
+    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+    CLEAR exit_command.
+    DATA(profile) = VALUE bal_s_prof( ).
+
+    CALL FUNCTION 'BAL_DSP_PROFILE_SINGLE_LOG_GET'
       IMPORTING
         e_s_display_profile = profile.
 
@@ -240,28 +264,6 @@ CLASS ycl_simbal_gui IMPLEMENTATION.
         e_s_display_profile = profile.
 
     show_with_bal_profile( profile ).
-  ENDMETHOD.
-
-
-  METHOD get_dummy_balsub.
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    " Returns a dummy BALSUB key for display purposes only
-    """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    IF ycl_simbal_gui=>dummy_balsub IS INITIAL.
-      SELECT SINGLE * FROM balsub                       "#EC CI_GENBUFF
-             WHERE object LIKE 'Y%' OR                  "#EC CI_NOORDER
-                   object LIKE 'Z%'
-             INTO CORRESPONDING FIELDS OF
-             @ycl_simbal_gui=>dummy_balsub.
-
-      IF sy-subrc <> 0.
-        SELECT SINGLE * FROM balsub                     "#EC CI_GENBUFF
-               INTO CORRESPONDING FIELDS OF             "#EC CI_NOORDER
-               @ycl_simbal_gui=>dummy_balsub.
-      ENDIF.
-    ENDIF.
-
-    output = ycl_simbal_gui=>dummy_balsub.
   ENDMETHOD.
 
 
