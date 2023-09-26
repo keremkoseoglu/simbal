@@ -1,14 +1,14 @@
 CLASS ycl_simbal DEFINITION
   PUBLIC
-  CREATE PUBLIC .
+  CREATE PUBLIC.
 
   PUBLIC SECTION.
     TYPES bapi_coru_return_list TYPE STANDARD TABLE OF bapi_coru_return WITH EMPTY KEY.
-    TYPES bapireturn_list TYPE STANDARD TABLE OF bapireturn WITH EMPTY KEY.
-    TYPES bapireturn1_list TYPE STANDARD TABLE OF bapireturn1 WITH EMPTY KEY.
-    TYPES severity_type TYPE char1.
-    TYPES mesg_list TYPE STANDARD TABLE OF mesg WITH EMPTY KEY.
-    TYPES message_type_range TYPE RANGE OF symsgty.
+    TYPES bapireturn_list       TYPE STANDARD TABLE OF bapireturn WITH EMPTY KEY.
+    TYPES bapireturn1_list      TYPE STANDARD TABLE OF bapireturn1 WITH EMPTY KEY.
+    TYPES severity_type         TYPE char1.
+    TYPES mesg_list             TYPE STANDARD TABLE OF mesg WITH EMPTY KEY.
+    TYPES message_type_range    TYPE RANGE OF symsgty.
 
     CONSTANTS default_preservation TYPE i VALUE 60.
 
@@ -28,169 +28,136 @@ CLASS ycl_simbal DEFINITION
                  warning TYPE severity_type VALUE 'W',
                END OF severity.
 
-    DATA object TYPE balobj_d READ-ONLY.
-    DATA subobject TYPE balsubobj READ-ONLY.
+    DATA object     TYPE balobj_d   READ-ONLY.
+    DATA subobject  TYPE balsubobj  READ-ONLY.
     DATA log_handle TYPE balloghndl READ-ONLY.
 
     CLASS-METHODS get_crit_msgty_range
-      RETURNING
-        VALUE(output) TYPE message_type_range.
+      RETURNING VALUE(output) TYPE message_type_range.
 
     METHODS constructor
-      IMPORTING
-        !object            TYPE balobj_d
-        !subobject         TYPE balsubobj
-        !preservation_days TYPE int4 DEFAULT default_preservation
-        !extnumber         TYPE balnrext OPTIONAL
-      RAISING
-        ycx_simbal_log .
+      IMPORTING !object           TYPE balobj_d
+                subobject         TYPE balsubobj
+                preservation_days TYPE int4     DEFAULT default_preservation
+                extnumber         TYPE balnrext OPTIONAL
+      RAISING   ycx_simbal_log.
 
     METHODS add_bapi_coru_return
-      IMPORTING
-        !bapi_coru_return TYPE bapi_coru_return_list.
+      IMPORTING bapi_coru_return TYPE bapi_coru_return_list.
 
     METHODS add_bapiret1
-      IMPORTING
-        !bapireturn1 TYPE bapiret1_list .
+      IMPORTING bapireturn1 TYPE bapiret1_list.
 
     METHODS add_bapiret2
-      IMPORTING
-        !bapiret2 TYPE bapiret2_tab
-        !cumulate TYPE abap_bool DEFAULT abap_false .
+      IMPORTING bapiret2 TYPE bapiret2_tab
+                cumulate TYPE abap_bool DEFAULT abap_false.
 
     METHODS add_bapireturn
-      IMPORTING
-        !bapireturn TYPE bapireturn_list.
+      IMPORTING bapireturn TYPE bapireturn_list.
 
     METHODS add_bapireturn1
-      IMPORTING
-        !bapireturn1 TYPE bapireturn1_list .
+      IMPORTING bapireturn1 TYPE bapireturn1_list.
 
     METHODS add_bdcmsgcoll
-      IMPORTING
-        !bdcmsgcoll TYPE ettcd_msg_tabtype .
+      IMPORTING bdcmsgcoll TYPE ettcd_msg_tabtype.
 
     METHODS add_bcsy_text
-      IMPORTING
-        !bcsy_text TYPE bcsy_text
-        !msgty     TYPE symsgty DEFAULT msgty-status .
+      IMPORTING bcsy_text TYPE bcsy_text
+                msgty     TYPE symsgty DEFAULT msgty-status.
 
     METHODS add_deepest_exception
-      IMPORTING
-        !cx    TYPE REF TO cx_root
-        !msgty TYPE symsgty DEFAULT msgty-error .
+      IMPORTING cx    TYPE REF TO cx_root
+                msgty TYPE symsgty DEFAULT msgty-error.
 
     METHODS add_exception
-      IMPORTING
-        !cx    TYPE REF TO cx_root
-        !msgty TYPE symsgty DEFAULT msgty-error .
+      IMPORTING cx    TYPE REF TO cx_root
+                msgty TYPE symsgty DEFAULT msgty-error.
 
     METHODS add_free_text
-      IMPORTING
-        !text  TYPE c
-        !msgty TYPE symsgty DEFAULT msgty-status .
+      IMPORTING !text TYPE c
+                msgty TYPE symsgty DEFAULT msgty-status.
 
     METHODS add_itab_fld_as_free_text
-      IMPORTING
-        !tab   TYPE REF TO data
-        !fld   TYPE fieldname
-        !intro TYPE clike OPTIONAL
-        !msgty TYPE symsgty DEFAULT msgty-status
-      RAISING
-        ycx_simbal_log.
+      IMPORTING !tab  TYPE REF TO data
+                fld   TYPE fieldname
+                intro TYPE clike   OPTIONAL
+                msgty TYPE symsgty DEFAULT msgty-status
+      RAISING   ycx_simbal_log.
 
-    METHODS add_mesg IMPORTING !mesg TYPE mesg_list.
+    METHODS add_mesg IMPORTING mesg TYPE mesg_list.
 
     METHODS add_string
-      IMPORTING
-        !msg   TYPE string
-        !msgty TYPE symsgty DEFAULT msgty-error.
+      IMPORTING msg   TYPE string
+                msgty TYPE symsgty DEFAULT msgty-error.
 
     METHODS add_swr
-      IMPORTING
-        !swr TYPE swr_msgtab .
+      IMPORTING swr TYPE swr_msgtab.
 
     METHODS add_swr_messag
-      IMPORTING
-        !swr TYPE sapi_msg_lines .
+      IMPORTING swr TYPE sapi_msg_lines.
 
     METHODS add_sy_msg
-      IMPORTING
-        !cumulate TYPE abap_bool DEFAULT abap_false .
+      IMPORTING cumulate TYPE abap_bool DEFAULT abap_false.
 
     METHODS add_t100_msg
-      IMPORTING
-        !msgid    TYPE symsgid
-        !msgno    TYPE symsgno
-        !msgty    TYPE symsgty
-        !msgv1    TYPE data OPTIONAL
-        !msgv2    TYPE data OPTIONAL
-        !msgv3    TYPE data OPTIONAL
-        !msgv4    TYPE data OPTIONAL
-        !cumulate TYPE abap_bool DEFAULT abap_false .
+      IMPORTING msgid    TYPE symsgid
+                msgno    TYPE symsgno
+                msgty    TYPE symsgty
+                msgv1    TYPE data      OPTIONAL
+                msgv2    TYPE data      OPTIONAL
+                msgv3    TYPE data      OPTIONAL
+                msgv4    TYPE data      OPTIONAL
+                cumulate TYPE abap_bool DEFAULT abap_false.
 
-    METHODS clear_log .
+    METHODS clear_log.
 
     METHODS get_message_count
-      IMPORTING
-        !msgty_x      TYPE flag DEFAULT abap_true
-        !msgty_a      TYPE flag DEFAULT abap_true
-        !msgty_e      TYPE flag DEFAULT abap_true
-        !msgty_w      TYPE flag DEFAULT abap_true
-        !msgty_i      TYPE flag DEFAULT abap_true
-        !msgty_s      TYPE flag DEFAULT abap_true
-      RETURNING
-        VALUE(output) TYPE int4 .
+      IMPORTING msgty_x       TYPE flag DEFAULT abap_true
+                msgty_a       TYPE flag DEFAULT abap_true
+                msgty_e       TYPE flag DEFAULT abap_true
+                msgty_w       TYPE flag DEFAULT abap_true
+                msgty_i       TYPE flag DEFAULT abap_true
+                msgty_s       TYPE flag DEFAULT abap_true
+      RETURNING VALUE(output) TYPE int4.
 
     METHODS get_messages
-      IMPORTING
-        !msgty_x      TYPE abap_bool DEFAULT abap_true
-        !msgty_a      TYPE abap_bool DEFAULT abap_true
-        !msgty_e      TYPE abap_bool DEFAULT abap_true
-        !msgty_w      TYPE abap_bool DEFAULT abap_true
-        !msgty_i      TYPE abap_bool DEFAULT abap_true
-        !msgty_s      TYPE abap_bool DEFAULT abap_true
-      RETURNING
-        VALUE(output) TYPE bapiret2_t .
+      IMPORTING msgty_x       TYPE abap_bool DEFAULT abap_true
+                msgty_a       TYPE abap_bool DEFAULT abap_true
+                msgty_e       TYPE abap_bool DEFAULT abap_true
+                msgty_w       TYPE abap_bool DEFAULT abap_true
+                msgty_i       TYPE abap_bool DEFAULT abap_true
+                msgty_s       TYPE abap_bool DEFAULT abap_true
+      RETURNING VALUE(output) TYPE bapiret2_t.
 
     METHODS get_messages_as_json
-      IMPORTING
-        !msgty_x      TYPE abap_bool DEFAULT abap_true
-        !msgty_a      TYPE abap_bool DEFAULT abap_true
-        !msgty_e      TYPE abap_bool DEFAULT abap_true
-        !msgty_w      TYPE abap_bool DEFAULT abap_true
-        !msgty_i      TYPE abap_bool DEFAULT abap_true
-        !msgty_s      TYPE abap_bool DEFAULT abap_true
-        !short        TYPE abap_bool DEFAULT abap_false
-      RETURNING
-        VALUE(output) TYPE string.
+      IMPORTING msgty_x       TYPE abap_bool DEFAULT abap_true
+                msgty_a       TYPE abap_bool DEFAULT abap_true
+                msgty_e       TYPE abap_bool DEFAULT abap_true
+                msgty_w       TYPE abap_bool DEFAULT abap_true
+                msgty_i       TYPE abap_bool DEFAULT abap_true
+                msgty_s       TYPE abap_bool DEFAULT abap_true
+                !short        TYPE abap_bool DEFAULT abap_false
+      RETURNING VALUE(output) TYPE string.
 
     METHODS get_text_of_msgid
-      IMPORTING
-        VALUE(cl)     TYPE sy-msgid
-        VALUE(number) TYPE sy-msgno
-      RETURNING
-        VALUE(output) TYPE bapi_msg .
+      IMPORTING VALUE(cl)     TYPE sy-msgid
+                VALUE(number) TYPE sy-msgno
+      RETURNING VALUE(output) TYPE bapi_msg.
 
     METHODS get_worst_severity
-      RETURNING
-        VALUE(output) TYPE severity_type .
+      RETURNING VALUE(output) TYPE severity_type.
 
     METHODS save_to_db_2nd_connection
-      CHANGING
-        VALUE(save_all) TYPE abap_bool DEFAULT abap_true
-      RAISING
-        ycx_simbal_log .
+      CHANGING VALUE(save_all) TYPE abap_bool DEFAULT abap_true
+      RAISING  ycx_simbal_log.
 
     METHODS save_to_db
-      IMPORTING
-        !commit         TYPE abap_bool DEFAULT abap_false
-      CHANGING
-        VALUE(save_all) TYPE abap_bool DEFAULT abap_true
-      RAISING
-        ycx_simbal_log .
+      IMPORTING !commit         TYPE abap_bool DEFAULT abap_false
+      CHANGING  VALUE(save_all) TYPE abap_bool DEFAULT abap_true
+      RAISING   ycx_simbal_log.
 
   PROTECTED SECTION.
+
   PRIVATE SECTION.
     CONSTANTS: BEGIN OF option,
                  eq TYPE ddoption VALUE 'EQ',
@@ -207,22 +174,17 @@ CLASS ycl_simbal DEFINITION
     CLASS-DATA critical_message_type_rng TYPE message_type_range.
 
     CLASS-METHODS determine_pclass
-      IMPORTING
-        !msgty        TYPE symsgty
-      RETURNING
-        VALUE(output) TYPE bal_s_msg-probclass .
+      IMPORTING msgty         TYPE symsgty
+      RETURNING VALUE(output) TYPE bal_s_msg-probclass.
 
     CLASS-METHODS get_json_text
-      IMPORTING !val          TYPE any
+      IMPORTING val           TYPE any
       RETURNING VALUE(output) TYPE string.
 
 ENDCLASS.
 
 
-
-CLASS YCL_SIMBAL IMPLEMENTATION.
-
-
+CLASS ycl_simbal IMPLEMENTATION.
   METHOD add_bapiret1.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a list of BAPIRET1 messages to the log
@@ -239,18 +201,16 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_bapiret2.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a list of BAPIRET2 messages to the log
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     LOOP AT bapiret2 ASSIGNING FIELD-SYMBOL(<br2>).
       IF <br2>-id IS INITIAL AND <br2>-message IS NOT INITIAL.
-        add_free_text(
-            text  = <br2>-message
-            msgty = COND #( WHEN <br2>-type IS NOT INITIAL
-                            THEN <br2>-type
-                            ELSE me->msgty-status ) ).
+        add_free_text( text  = <br2>-message
+                       msgty = COND #( WHEN <br2>-type IS NOT INITIAL
+                                       THEN <br2>-type
+                                       ELSE me->msgty-status ) ).
       ELSE.
         add_t100_msg( msgid    = <br2>-id
                       msgno    = <br2>-number
@@ -264,7 +224,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_bapireturn.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a list of BAPIRETURN messages to the log
@@ -274,7 +233,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
                      msgty = <br>-type ).
     ENDLOOP.
   ENDMETHOD.
-
 
   METHOD add_bapireturn1.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -292,7 +250,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_bapi_coru_return.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a list of BAPI_CORU_RETURN messages to the log
@@ -309,7 +266,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_bcsy_text.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a list of BCSY_TEXT messages to the log
@@ -319,7 +275,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
                      msgty = msgty ).
     ENDLOOP.
   ENDMETHOD.
-
 
   METHOD add_bdcmsgcoll.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -337,7 +292,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_deepest_exception.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds the deepest PREVIOUS exception to the log
@@ -353,7 +307,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-
   METHOD add_exception.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds an exception to the log
@@ -363,39 +316,28 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     add_exception( cx    = cx->previous
                    msgty = msgty ).
 
-    CASE cx->is_resumable.
-      WHEN abap_true.
-        add_free_text( text  = CONV text200( cx->get_text( ) )
-                       msgty = msgty ).
-
-      WHEN abap_false.
-        MESSAGE cx TYPE me->msgty-status.
-        sy-msgty = msgty.
-        add_sy_msg( ).
-    ENDCASE.
+    add_free_text( text  = CONV text200( cx->get_text( ) )
+                   msgty = msgty ).
   ENDMETHOD.
-
 
   METHOD add_free_text.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds any text to the log
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     CALL FUNCTION 'BAL_LOG_MSG_ADD_FREE_TEXT'
-      EXPORTING
-        i_log_handle  = me->log_handle
-        i_text        = text
-        i_msgty       = msgty
-        i_probclass   = determine_pclass( msgty )
-      EXCEPTIONS
-        log_not_found = 0
-        OTHERS        = 1 ##FM_SUBRC_OK.
+      EXPORTING  i_log_handle  = me->log_handle
+                 i_text        = text
+                 i_msgty       = msgty
+                 i_probclass   = determine_pclass( msgty )
+      EXCEPTIONS log_not_found = 0
+                 OTHERS        = 1 ##FM_SUBRC_OK.
   ENDMETHOD.
-
 
   METHOD add_itab_fld_as_free_text.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds the given field of an ITAB to the log
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
     FIELD-SYMBOLS <itab> TYPE ANY TABLE.
 
     TRY.
@@ -410,8 +352,8 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
 
         ASSIGN tab->* TO <itab>.
 
-        IF NOT ( <itab> IS ASSIGNED AND
-                 <itab> IS NOT INITIAL ).
+        IF NOT (     <itab> IS ASSIGNED
+                 AND <itab> IS NOT INITIAL ).
           RETURN.
         ENDIF.
 
@@ -426,12 +368,10 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
 
       CATCH cx_root INTO DATA(diaper).
         RAISE EXCEPTION TYPE ycx_simbal_log
-          EXPORTING
-            textid   = ycx_simbal_log=>add_message_error
-            previous = diaper.
+          EXPORTING textid   = ycx_simbal_log=>add_message_error
+                    previous = diaper.
     ENDTRY.
   ENDMETHOD.
-
 
   METHOD add_mesg.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -443,26 +383,23 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_string.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a string to the log
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    DATA br2 TYPE bapiret2_tab.
-    DATA ret TYPE TABLE OF char50.
-    DATA cmsg(9999).
+
+    DATA cmsg TYPE c LENGTH 9999.
+    DATA ret  TYPE TABLE OF char50.
+    DATA br2  TYPE bapiret2_tab.
 
     cmsg = msg.
 
     CALL FUNCTION 'IQAPI_WORD_WRAP'
-      EXPORTING
-        textline            = cmsg
-        outputlen           = 50
-      TABLES
-        out_lines           = ret
-      EXCEPTIONS
-        outputlen_too_large = 1
-        OTHERS              = 2. "#EC NUMBER_OK
+      EXPORTING  textline            = cmsg
+                 outputlen           = 50
+      TABLES     out_lines           = ret
+      EXCEPTIONS outputlen_too_large = 1
+                 OTHERS              = 2 ##NUMBER_OK.
 
     IF sy-subrc <> 0.
       RETURN.
@@ -471,16 +408,16 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     APPEND INITIAL LINE TO br2 ASSIGNING FIELD-SYMBOL(<return>).
 
     LOOP AT ret ASSIGNING FIELD-SYMBOL(<ret>).
-      <return>-id = me->msgid-simbal.
+      <return>-id     = me->msgid-simbal.
       <return>-number = '006'.
-      <return>-type = msgty.
-      IF  <return>-message_v1 IS INITIAL.
+      <return>-type   = msgty.
+      IF <return>-message_v1 IS INITIAL.
         <return>-message_v1 = <ret>.
-      ELSEIF  <return>-message_v2 IS INITIAL.
+      ELSEIF <return>-message_v2 IS INITIAL.
         <return>-message_v2 = <ret>.
-      ELSEIF  <return>-message_v3 IS INITIAL.
+      ELSEIF <return>-message_v3 IS INITIAL.
         <return>-message_v3 = <ret>.
-      ELSEIF  <return>-message_v4 IS INITIAL.
+      ELSEIF <return>-message_v4 IS INITIAL.
         <return>-message_v4 = <ret>.
         APPEND INITIAL LINE TO br2 ASSIGNING <return>.
       ENDIF.
@@ -489,7 +426,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     DELETE br2 WHERE message_v1 IS INITIAL.
     add_bapiret2( br2 ).
   ENDMETHOD.
-
 
   METHOD add_swr.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -507,7 +443,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD add_swr_messag.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds a list of SWR messages to the log
@@ -517,7 +452,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
                      msgty = <swr>-msg_type ).
     ENDLOOP.
   ENDMETHOD.
-
 
   METHOD add_sy_msg.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -533,16 +467,14 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
                   cumulate = cumulate ).
   ENDMETHOD.
 
-
   METHOD add_t100_msg.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Adds T100 messages to the log
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    DATA(log_msg) = VALUE bal_s_msg(
-        msgty     = msgty
-        msgid     = msgid
-        msgno     = msgno
-        probclass = determine_pclass( msgty ) ).
+    DATA(log_msg) = VALUE bal_s_msg( msgty     = msgty
+                                     msgid     = msgid
+                                     msgno     = msgno
+                                     probclass = determine_pclass( msgty ) ).
 
     WRITE: msgv1 TO log_msg-msgv1 LEFT-JUSTIFIED,
            msgv2 TO log_msg-msgv2 LEFT-JUSTIFIED,
@@ -551,26 +483,21 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
 
     IF cumulate = abap_false.
       CALL FUNCTION 'BAL_LOG_MSG_ADD'
-        EXPORTING
-          i_log_handle  = me->log_handle
-          i_s_msg       = log_msg
-        EXCEPTIONS
-          log_not_found = 0
-          OTHERS        = 1 ##FM_SUBRC_OK.
+        EXPORTING  i_log_handle  = me->log_handle
+                   i_s_msg       = log_msg
+        EXCEPTIONS log_not_found = 0
+                   OTHERS        = 1 ##FM_SUBRC_OK.
 
     ELSE.
       CALL FUNCTION 'BAL_LOG_MSG_CUMULATE'
-        EXPORTING
-          i_log_handle     = me->log_handle
-          i_s_msg          = log_msg
-        EXCEPTIONS
-          log_not_found    = 1
-          msg_inconsistent = 2
-          log_is_full      = 3
-          OTHERS           = 4 ##FM_SUBRC_OK.
+        EXPORTING  i_log_handle     = me->log_handle
+                   i_s_msg          = log_msg
+        EXCEPTIONS log_not_found    = 1
+                   msg_inconsistent = 2
+                   log_is_full      = 3
+                   OTHERS           = 4 ##FM_SUBRC_OK.
     ENDIF.
   ENDMETHOD.
-
 
   METHOD clear_log.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -581,21 +508,16 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     DATA(msg_handle) = CONV balmsghndl( me->log_handle ).
 
     CALL FUNCTION 'BAL_LOG_MSG_DELETE'
-      EXPORTING
-        i_s_msg_handle = msg_handle
-      EXCEPTIONS
-        msg_not_found  = 1
-        log_not_found  = 2
-        OTHERS         = 3 ##FM_SUBRC_OK.
+      EXPORTING  i_s_msg_handle = msg_handle
+      EXCEPTIONS msg_not_found  = 1
+                 log_not_found  = 2
+                 OTHERS         = 3 ##FM_SUBRC_OK.
 
     CALL FUNCTION 'BAL_LOG_MSG_DELETE_ALL'
-      EXPORTING
-        i_log_handle  = log_handle
-      EXCEPTIONS
-        log_not_found = 1
-        OTHERS        = 2 ##FM_SUBRC_OK.
+      EXPORTING  i_log_handle  = log_handle
+      EXCEPTIONS log_not_found = 1
+                 OTHERS        = 2 ##FM_SUBRC_OK.
   ENDMETHOD.
-
 
   METHOD constructor.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -615,57 +537,51 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
         extnumber  = extnumber ).
 
     CALL FUNCTION 'BAL_LOG_CREATE'
-      EXPORTING
-        i_s_log      = log_param
-      IMPORTING
-        e_log_handle = me->log_handle
-      EXCEPTIONS
-        OTHERS       = 1.
+      EXPORTING  i_s_log      = log_param
+      IMPORTING  e_log_handle = me->log_handle
+      EXCEPTIONS OTHERS       = 1.
 
     IF sy-subrc <> 0.
       RAISE EXCEPTION TYPE ycx_simbal_log
-        EXPORTING
-          textid    = ycx_simbal_log=>cant_create_instance
-          object    = me->object
-          subobject = me->subobject.
+        EXPORTING textid    = ycx_simbal_log=>cant_create_instance
+                  object    = me->object
+                  subobject = me->subobject.
     ENDIF.
   ENDMETHOD.
-
 
   METHOD determine_pclass.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Determines problem class
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    output = COND #( WHEN msgty IN get_crit_msgty_range( )   THEN '1'
-                     WHEN msgty  = ycl_simbal=>msgty-warning THEN '2'
-                     WHEN msgty  = ycl_simbal=>msgty-info OR
-                          msgty  = ycl_simbal=>msgty-status  THEN '4'
-                     ELSE '2' ).
+    output = COND #( WHEN msgty IN get_crit_msgty_range( )  THEN '1'
+                     WHEN msgty = ycl_simbal=>msgty-warning THEN '2'
+                     WHEN msgty = ycl_simbal=>msgty-info
+                       OR msgty = ycl_simbal=>msgty-status  THEN '4'
+                     ELSE                                        '2' ).
   ENDMETHOD.
-
 
   METHOD get_crit_msgty_range.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Returns a list of critical message types
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     IF ycl_simbal=>critical_message_type_rng IS INITIAL.
-      ycl_simbal=>critical_message_type_rng = VALUE #(
-          option = ycl_simbal=>option-eq
-          sign   = ycl_simbal=>sign-include
-          ( low = ycl_simbal=>msgty-exit )
-          ( low = ycl_simbal=>msgty-abort )
-          ( low = ycl_simbal=>msgty-error ) ).
+      ycl_simbal=>critical_message_type_rng = VALUE #( option = ycl_simbal=>option-eq
+                                                       sign   = ycl_simbal=>sign-include
+                                                       ( low = ycl_simbal=>msgty-exit )
+                                                       ( low = ycl_simbal=>msgty-abort )
+                                                       ( low = ycl_simbal=>msgty-error ) ).
     ENDIF.
 
     output = ycl_simbal=>critical_message_type_rng.
   ENDMETHOD.
 
-
   METHOD get_json_text.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Converts the text to an acceptable JSON string
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
     DATA text TYPE text100.
+
     WRITE val TO text LEFT-JUSTIFIED.
     output = text.
 
@@ -674,14 +590,14 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
         '"' IN output WITH '\"'.
   ENDMETHOD.
 
-
   METHOD get_messages.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Returns messages in BAPIRET2 format
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+    DATA msg_filter  TYPE bal_s_mfil.
     DATA msg_handles TYPE bal_t_msgh.
     DATA msg         TYPE bal_s_msg.
-    DATA msg_filter  TYPE bal_s_mfil.
     DATA msg_bapi    TYPE bapiret2.
 
     CHECK me->log_handle IS NOT INITIAL.
@@ -689,43 +605,43 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     IF msgty_x IS NOT INITIAL.
       APPEND VALUE #( option = me->option-eq
                       sign   = me->sign-include
-                      low    = me->msgty-exit
-                    ) TO msg_filter-msgty.
+                      low    = me->msgty-exit )
+             TO msg_filter-msgty.
     ENDIF.
 
     IF msgty_a IS NOT INITIAL.
       APPEND VALUE #( option = me->option-eq
                       sign   = me->sign-include
-                      low    = me->msgty-abort
-                    ) TO msg_filter-msgty.
+                      low    = me->msgty-abort )
+             TO msg_filter-msgty.
     ENDIF.
 
     IF msgty_e IS NOT INITIAL.
       APPEND VALUE #( option = me->option-eq
                       sign   = me->sign-include
-                      low    = me->msgty-error
-                    ) TO msg_filter-msgty.
+                      low    = me->msgty-error )
+             TO msg_filter-msgty.
     ENDIF.
 
     IF msgty_w IS NOT INITIAL.
       APPEND VALUE #( option = me->option-eq
                       sign   = me->sign-include
-                      low    = me->msgty-warning
-                    ) TO msg_filter-msgty.
+                      low    = me->msgty-warning )
+             TO msg_filter-msgty.
     ENDIF.
 
     IF msgty_i IS NOT INITIAL.
       APPEND VALUE #( option = me->option-eq
                       sign   = me->sign-include
-                      low    = me->msgty-info
-                    ) TO msg_filter-msgty.
+                      low    = me->msgty-info )
+             TO msg_filter-msgty.
     ENDIF.
 
     IF msgty_s IS NOT INITIAL.
       APPEND VALUE #( option = me->option-eq
                       sign   = me->sign-include
-                      low    = me->msgty-status
-                    ) TO msg_filter-msgty.
+                      low    = me->msgty-status )
+             TO msg_filter-msgty.
     ENDIF.
 
     IF msg_filter-msgty IS INITIAL.
@@ -735,13 +651,10 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     DATA(log_handles) = VALUE bal_t_logh( ( me->log_handle ) ).
 
     CALL FUNCTION 'BAL_GLB_SEARCH_MSG'
-      EXPORTING
-        i_t_log_handle = log_handles
-        i_s_msg_filter = msg_filter
-      IMPORTING
-        e_t_msg_handle = msg_handles
-      EXCEPTIONS
-        msg_not_found  = 1.
+      EXPORTING  i_t_log_handle = log_handles
+                 i_s_msg_filter = msg_filter
+      IMPORTING  e_t_msg_handle = msg_handles
+      EXCEPTIONS msg_not_found  = 1.
 
     IF sy-subrc <> 0.
       RETURN.
@@ -749,45 +662,38 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
 
     LOOP AT msg_handles ASSIGNING FIELD-SYMBOL(<msg_handle>).
       CALL FUNCTION 'BAL_LOG_MSG_READ'
-        EXPORTING
-          i_s_msg_handle = <msg_handle>
-          i_langu        = sy-langu
-        IMPORTING
-          e_s_msg        = msg
-        EXCEPTIONS
-          log_not_found  = 1
-          msg_not_found  = 2.
+        EXPORTING  i_s_msg_handle = <msg_handle>
+                   i_langu        = sy-langu
+        IMPORTING  e_s_msg        = msg
+        EXCEPTIONS log_not_found  = 1
+                   msg_not_found  = 2.
 
       CHECK sy-subrc = 0.
 
       CALL FUNCTION 'BALW_BAPIRETURN_GET2'
-        EXPORTING
-          type   = msg-msgty
-          cl     = msg-msgid
-          number = msg-msgno
-          par1   = msg-msgv1
-          par2   = msg-msgv2
-          par3   = msg-msgv3
-          par4   = msg-msgv4
-        IMPORTING
-          return = msg_bapi.
+        EXPORTING type   = msg-msgty
+                  cl     = msg-msgid
+                  number = msg-msgno
+                  par1   = msg-msgv1
+                  par2   = msg-msgv2
+                  par3   = msg-msgv3
+                  par4   = msg-msgv4
+        IMPORTING return = msg_bapi.
 
       APPEND msg_bapi TO output.
     ENDLOOP.
   ENDMETHOD.
 
-
   METHOD get_messages_as_json.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Returns messages in JSON format
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    DATA(messages_as_itab) = get_messages(
-               msgty_x  = msgty_x
-               msgty_a  = msgty_a
-               msgty_e  = msgty_e
-               msgty_w  = msgty_w
-               msgty_i  = msgty_i
-               msgty_s  = msgty_s ).
+    DATA(messages_as_itab) = get_messages( msgty_x = msgty_x
+                                           msgty_a = msgty_a
+                                           msgty_e = msgty_e
+                                           msgty_w = msgty_w
+                                           msgty_i = msgty_i
+                                           msgty_s = msgty_s ).
 
     output = '['.
 
@@ -828,38 +734,33 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     output = |{ output }]|.
   ENDMETHOD.
 
-
   METHOD get_message_count.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Returns the number of messages
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-    output = lines( get_messages(
-        msgty_x = msgty_x
-        msgty_a = msgty_a
-        msgty_e = msgty_e
-        msgty_w = msgty_w
-        msgty_i = msgty_i
-        msgty_s = msgty_s ) ).
+    output = lines( get_messages( msgty_x = msgty_x
+                                  msgty_a = msgty_a
+                                  msgty_e = msgty_e
+                                  msgty_w = msgty_w
+                                  msgty_i = msgty_i
+                                  msgty_s = msgty_s ) ).
   ENDMETHOD.
-
 
   METHOD get_text_of_msgid.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Returns the text of message ID
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
     DATA msg_bapi TYPE bapiret2.
 
     CALL FUNCTION 'BALW_BAPIRETURN_GET2'
-      EXPORTING
-        type   = me->msgty-status
-        cl     = cl
-        number = number
-      IMPORTING
-        return = msg_bapi.
+      EXPORTING type   = me->msgty-status
+                cl     = cl
+                number = number
+      IMPORTING return = msg_bapi.
 
     output = msg_bapi-message.
   ENDMETHOD.
-
 
   METHOD get_worst_severity.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -867,7 +768,7 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     DATA(msg) = get_messages( ).
 
-    LOOP AT msg TRANSPORTING NO FIELDS WHERE type IN get_crit_msgty_range(  ).
+    LOOP AT msg TRANSPORTING NO FIELDS WHERE type IN get_crit_msgty_range( ).
       output = me->severity-error.
       RETURN.
     ENDLOOP.
@@ -880,7 +781,6 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     output = me->severity-all.
   ENDMETHOD.
 
-
   METHOD save_to_db.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
     " Saves log messages to the database
@@ -888,29 +788,25 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     DATA(log_handles) = VALUE bal_t_logh( ( me->log_handle ) ).
 
     CALL FUNCTION 'BAL_DB_SAVE'
-      EXPORTING
-        i_in_update_task = abap_true
-        i_save_all       = save_all
-        i_t_log_handle   = log_handles
-      EXCEPTIONS
-        log_not_found    = 1
-        save_not_allowed = 2
-        numbering_error  = 3
-        OTHERS           = 4.
+      EXPORTING  i_in_update_task = abap_true
+                 i_save_all       = save_all
+                 i_t_log_handle   = log_handles
+      EXCEPTIONS log_not_found    = 1
+                 save_not_allowed = 2
+                 numbering_error  = 3
+                 OTHERS           = 4.
 
     IF sy-subrc <> 0.
       RAISE EXCEPTION TYPE ycx_simbal_log
-        EXPORTING
-          textid    = ycx_simbal_log=>cant_save
-          object    = me->object
-          subobject = me->subobject.
+        EXPORTING textid    = ycx_simbal_log=>cant_save
+                  object    = me->object
+                  subobject = me->subobject.
     ENDIF.
 
     IF commit = abap_true.
       COMMIT WORK AND WAIT.
     ENDIF.
   ENDMETHOD.
-
 
   METHOD save_to_db_2nd_connection.
     """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -919,24 +815,21 @@ CLASS YCL_SIMBAL IMPLEMENTATION.
     DATA(log_handles) = VALUE bal_t_logh( ( me->log_handle ) ).
 
     CALL FUNCTION 'BAL_DB_SAVE'
-      EXPORTING
-        i_in_update_task     = abap_false
-        i_save_all           = save_all
-        i_t_log_handle       = log_handles
-        i_2th_connection     = abap_true
-        i_2th_connect_commit = abap_true
-      EXCEPTIONS
-        log_not_found        = 1
-        save_not_allowed     = 2
-        numbering_error      = 3
-        OTHERS               = 4.
+      EXPORTING  i_in_update_task     = abap_false
+                 i_save_all           = save_all
+                 i_t_log_handle       = log_handles
+                 i_2th_connection     = abap_true
+                 i_2th_connect_commit = abap_true
+      EXCEPTIONS log_not_found        = 1
+                 save_not_allowed     = 2
+                 numbering_error      = 3
+                 OTHERS               = 4.
 
     IF sy-subrc <> 0.
       RAISE EXCEPTION TYPE ycx_simbal_log
-        EXPORTING
-          textid    = ycx_simbal_log=>cant_save
-          object    = me->object
-          subobject = me->subobject.
+        EXPORTING textid    = ycx_simbal_log=>cant_save
+                  object    = me->object
+                  subobject = me->subobject.
     ENDIF.
-  ENDMETHOD. "save_to_db
+  ENDMETHOD. " save_to_db
 ENDCLASS.
